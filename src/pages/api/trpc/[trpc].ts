@@ -3,21 +3,36 @@
  */
 import * as trpcNext from "@trpc/server/adapters/next";
 import { z } from "zod";
+import { keypadConfig } from "~/config/keypadConfig";
 import { publicProcedure, router } from "~/server/trpc";
 
+function addDigit(array: string[], options: string) {
+  const newArray: string[] = [];
+  array.forEach((item) => {
+    options.split("").forEach((letter) => {
+      newArray.push(item.concat(letter));
+    });
+  });
+  return newArray;
+}
+
+const processNumberToWords = (numericString: string) => {
+  var result = [""];
+  numericString.split("").forEach((digit) => {
+    result = addDigit(result, keypadConfig[digit]);
+  });
+  return result;
+};
+
 const appRouter = router({
-  greeting: publicProcedure
-    // This is the input schema of your procedure
+  processNumberToWords: publicProcedure
     .input(
       z.object({
-        name: z.string().nullish(),
+        numericString: z.string(),
       })
     )
     .query(({ input }) => {
-      // This is what you're returning to your client
-      return {
-        text: `hello ${input?.name ?? "world"}`,
-      };
+      return processNumberToWords(input.numericString);
     }),
 });
 

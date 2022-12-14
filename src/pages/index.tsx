@@ -1,11 +1,20 @@
 /**
  * This is a Next.js page.
  */
+import React from "react";
 import { trpc } from "../utils/trpc";
 import { NumericKeypad } from "../components/NumericKeypad";
 
 export default function IndexPage() {
-  const result = trpc.greeting.useQuery({ name: "client" });
+  const [inputNumericString, setInputNumericString] =
+    React.useState<string>("");
+  const result = trpc.processNumberToWords.useQuery({
+    numericString: inputNumericString,
+  });
+
+  const onClickHandler = ({ numericKey }: Record<"numericKey", string>) => {
+    setInputNumericString(inputNumericString.concat(numericKey));
+  };
 
   if (!result.data) {
     return (
@@ -16,8 +25,12 @@ export default function IndexPage() {
   }
   return (
     <div style={styles}>
-      {/* <h1>{result.data.text}</h1> */}
-      <NumericKeypad />
+      <ul>
+        {result.data.map((item) => {
+          return <li>{item}</li>;
+        })}
+      </ul>
+      <NumericKeypad onClickHandler={onClickHandler} />
     </div>
   );
 }
