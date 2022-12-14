@@ -2,6 +2,7 @@
  * This is a Next.js page.
  */
 import { trpc } from "../utils/trpc";
+import { NumericKeypad } from "../components/NumericKeypad";
 
 export default function IndexPage() {
   const result = trpc.greeting.useQuery({ name: "client" });
@@ -15,7 +16,8 @@ export default function IndexPage() {
   }
   return (
     <div style={styles}>
-      <h1>{result.data.text}</h1>
+      {/* <h1>{result.data.text}</h1> */}
+      <NumericKeypad />
     </div>
   );
 }
