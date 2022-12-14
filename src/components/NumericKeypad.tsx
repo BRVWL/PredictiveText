@@ -14,13 +14,26 @@ const keypadConfig: Record<string, string> = {
 };
 
 export const NumericKeypad = () => {
+  const [inputNumber, setInputNumber] = React.useState<string>("");
+  const [inputText, setInputText] = React.useState<string>("");
   return (
     <div>
+      <div>
+        <h1>{inputNumber}</h1>
+      </div>
+      <div>
+        <h3>{inputText}</h3>
+      </div>
       {Object.keys(keypadConfig).map((numericKey) => {
         const correspondingString = keypadConfig[numericKey];
         return (
           <>
-            <button>
+            <button
+              onClick={() => {
+                setInputNumber(inputNumber.concat(numericKey));
+                setInputText(inputText.concat(correspondingString));
+              }}
+            >
               <span>
                 <b>{numericKey}</b>
                 <span>{correspondingString}</span>
