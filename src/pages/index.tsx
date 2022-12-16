@@ -8,15 +8,18 @@ import { NumericKeypad } from "../components/NumericKeypad";
 export default function IndexPage() {
   const [inputNumericString, setInputNumericString] =
     React.useState<string>("");
+
   const result = trpc.processNumberToWords.useQuery({
     numericString: inputNumericString,
   });
+
+  console.log("🚀 ~ file: index.tsx:14 ~ IndexPage ~ result", result);
 
   const onClickHandler = ({ numericKey }: Record<"numericKey", string>) => {
     setInputNumericString(inputNumericString.concat(numericKey));
   };
 
-  if (!result.data) {
+  if (!result?.data) {
     return (
       <div style={styles}>
         <h1>Loading...</h1>
@@ -27,7 +30,7 @@ export default function IndexPage() {
     <div style={styles}>
       <ul>
         {result.data.map((item) => {
-          return <li>{item}</li>;
+          return <li key={item}>{item}</li>;
         })}
       </ul>
       <NumericKeypad onClickHandler={onClickHandler} />
@@ -41,4 +44,5 @@ const styles = {
   display: "flex",
   justifyContent: "center",
   alignItems: "center",
+  overflow: "scroll",
 };
